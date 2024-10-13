@@ -1,24 +1,24 @@
-import { ProfileForm } from "@/components";
+import { EditProfile } from "@/components";
 import { getProfile } from "@/components/api";
 import React, { useEffect, useState } from "react";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
+import { RxCross1 } from "react-icons/rx";
 import Swal from "sweetalert2";
 
 const ProfileDetails = () => {
-  const [profile, setProfile] = useState<any>(null); // State to hold profile data
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const [profile, setProfile] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editProfile, setEditProfile] = useState<any>(null); // State to hold the profile data for editing
+  const [editProfile, setEditProfile] = useState<any>(null);
 
-  // Fetch the profile details on component mount
   useEffect(() => {
     try {
-      const profileData = getProfile(); // Fetch profile from localStorage
-      setProfile(profileData); // Set profile data in state
+      const profileData = getProfile();
+      setProfile(profileData);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message); // Handle error if profile is not found or there is another issue
+        setError(err.message);
       } else {
         setError("An unknown error occurred while fetching the profile.");
       }
@@ -26,8 +26,12 @@ const ProfileDetails = () => {
   }, []);
 
   const handleEdit = () => {
-    setEditProfile(profile); // Pre-fill the form with existing profile data
-    setIsModalOpen(true); // Open the edit modal
+    setEditProfile(profile);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdate = (updatedProfile: any) => {
+    setProfile(updatedProfile); // Update the profile in state
   };
 
   const handleDelete = async () => {
@@ -44,13 +48,12 @@ const ProfileDetails = () => {
       localStorage.removeItem("profile");
       await Swal.fire("Deleted!", "Your profile has been deleted.", "success");
 
-      // Go back to the previous page
-      window.history.back(); // This will also take the user back
+      window.history.back();
     }
   };
 
   if (error) {
-    return <p className="text-red-500">{error}</p>; // Display error message if any
+    return <p className="text-red-500">{error}</p>;
   }
   return (
     <section>
@@ -118,8 +121,22 @@ const ProfileDetails = () => {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 ">
             <div className="flex flex-col gap-4">
-              <h3 className="text-xl font-semibold">Edit Profile</h3>
-              <div></div>
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-semibold">Edit Profile</h3>
+                <div className="bg-red-500 rounded-md text-white p-1 cursor-pointer">
+                  <RxCross1
+                    className="text-md "
+                    onClick={() => setIsModalOpen(false)}
+                  />
+                </div>
+              </div>
+              <div>
+                <EditProfile
+                  profile={profile} // Pass profile as initial values
+                  onClose={() => setIsModalOpen(false)} // Close modal after edit
+                  onUpdate={handleUpdate} // Handle update
+                />
+              </div>
             </div>
           </div>
         </div>

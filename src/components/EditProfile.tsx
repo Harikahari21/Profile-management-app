@@ -1,53 +1,47 @@
-import React from "react";
-import { Field, FieldProps, Form, Formik } from "formik";
+import { editProfileTypeMutation } from "@/schemas";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { Field, FieldProps, Form, Formik } from "formik";
 import { CustomLoadingButton, InputField } from "./core";
-import { profileTypeMutation } from "@/schemas";
-import { saveProfile } from "./api";
 
-interface ProfileFormProps {
-  initialValues: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    age?: string;
-  };
+interface EditProfileProps {
+  profile: any;
+  onClose: () => void;
+  onUpdate: (updatedProfile: any) => void;
 }
 
-const ProfileForm = () => {
-  const {
-    profileTypeSchema,
-    profileTypeSchemaInitialValue,
-    profileTypeSchemaValidation,
-  } = profileTypeMutation();
+const EditProfile = ({ profile, onClose, onUpdate }: EditProfileProps) => {
+  const [initialProfile, setInitialProfile] = useState(profile);
 
-  const handleSubmit = async (
-    values: any,
-    { setSubmitting, setErrors }: any
-  ) => {
-    try {
-      await saveProfile(values);
-      window.location.href = "/profile";
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setErrors({ submit: error.message });
-      } else {
-        setErrors({ submit: "An unknown error occurred." });
-      }
-    } finally {
-      setSubmitting(false);
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("profile");
+    if (savedProfile) {
+      setInitialProfile(JSON.parse(savedProfile));
     }
-  };
+  }, []);
 
+  const {
+    editProfileTypeSchema,
+    editProfileTypeSchemaInitialValue,
+    editProfileTypeSchemaValidation,
+  } = editProfileTypeMutation({ profile: initialProfile });
+
+  const handleSubmit = (values: any) => {
+    localStorage.setItem("profile", JSON.stringify(values));
+    setInitialProfile(values);
+    onUpdate(values);
+    onClose();
+  };
   return (
     <Formik
-      initialValues={profileTypeSchemaInitialValue}
-      validationSchema={Yup.object(profileTypeSchemaValidation)}
+      initialValues={editProfileTypeSchemaInitialValue}
+      validationSchema={Yup.object(editProfileTypeSchemaValidation)}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       {(formik) => (
         <Form className="grid grid-cols-12  gap-x-4 gap-y-7">
-          {profileTypeSchema.map((inputItem) => (
+          {editProfileTypeSchema.map((inputItem) => (
             <Field name={inputItem.name} key={inputItem.key}>
               {(props: FieldProps<string>) => (
                 <div
@@ -92,7 +86,7 @@ const ProfileForm = () => {
           ))}
           <div className="flex items-center col-span-12 justify-center flex-col gap-2 pt-2">
             <CustomLoadingButton
-              title={"Create"}
+              title={"Update"}
               loading={formik.isSubmitting}
               type="submit"
               className="btn-primary py-3 rounded-md w-full"
@@ -104,4 +98,4 @@ const ProfileForm = () => {
   );
 };
 
-export default ProfileForm;
+export default EditProfile;

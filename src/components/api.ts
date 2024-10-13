@@ -1,17 +1,12 @@
-// api.ts - Using localStorage instead of actual API
-
 const PROFILE_KEY = "userProfile";
 
-// POST or PUT request to save or update profile data in localStorage
 export const saveProfile = (profileData: any): any => {
   try {
     const existingProfile = localStorage.getItem(PROFILE_KEY);
     if (existingProfile) {
-      // Update existing profile (PUT equivalent)
       const updatedProfile = { ...JSON.parse(existingProfile), ...profileData };
       localStorage.setItem(PROFILE_KEY, JSON.stringify(updatedProfile));
     } else {
-      // Create new profile (POST equivalent)
       localStorage.setItem(PROFILE_KEY, JSON.stringify(profileData));
     }
     return profileData;
