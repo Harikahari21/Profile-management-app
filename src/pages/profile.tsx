@@ -76,7 +76,7 @@ const ProfileDetails = () => {
             Your Profile Details
           </h2>
         </div>
-        <div className="main-container w-1/2">
+        <div className="main-container lg:w-1/2">
           <div className="bg-primary/5 rounded-xl shadow-lg px-4 py-6">
             <div className="flex justify-end gap-4 items-center">
               <BiEdit
