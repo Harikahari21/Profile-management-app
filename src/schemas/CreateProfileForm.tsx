@@ -4,14 +4,34 @@ const profileTypeMutation = () => {
   const profileTypeSchema = [
     {
       key: "1",
-      name: "name",
-      label: " Name",
-      placeholder: "Enter your name",
+      name: "firstName",
+      label: "First Name",
+      placeholder: "Enter your first name",
       type: "text",
       required: true,
       validationSchema: Yup.string()
         .required("Name is required")
-        .matches(/^[A-Za-z ]+$/, "Name must only contain alphabetic characters")
+        .matches(
+          /^[A-Za-z ]+$/,
+          "First Name must only contain alphabetic characters"
+        )
+        .trim(),
+      initialValue: "",
+      className: "col-span-12 ",
+    },
+    {
+      key: "2",
+      name: "lastName",
+      label: "Last Name",
+      placeholder: "Enter your last name",
+      type: "text",
+      required: true,
+      validationSchema: Yup.string()
+        .required("Name is required")
+        .matches(
+          /^[A-Za-z ]+$/,
+          "Last Name must only contain alphabetic characters"
+        )
         .min(3, "Name must be at least 3 characters")
         .max(50, "Name must be less than 50 characters")
         .trim(),
@@ -19,7 +39,7 @@ const profileTypeMutation = () => {
       className: "col-span-12 ",
     },
     {
-      key: "2",
+      key: "3",
       name: "email",
       label: "Enter Your Email",
       placeholder: "youremail@domain.com",
@@ -33,7 +53,7 @@ const profileTypeMutation = () => {
       className: "col-span-12",
     },
     {
-      key: "3",
+      key: "4",
       name: "age",
       label: "Age",
       placeholder: "Enter Your Age",

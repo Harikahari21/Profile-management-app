@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #1b4e9b transparent;
+  scroll-behavior: smooth;
+}
+::-webkit-scrollbar {
+  width: 0.25em;
+  height: 0.25em;
+}
+::-webkit-scrollbar-thumb {
+  background: #1b4e9b;
+  border-radius: 10em;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+*:disabled {
+  cursor: not-allowed;
+}
+:root {
+  --skeleton-bg-light: rgb(241 245 249);
+}
+
+a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background-color: white;
+  color: black;
+  font-family: "Poppins", sans-serif;
+  scroll-behavior: smooth !important;
+}
+
 @layer components {
   .main-container {
     @apply container mx-auto px-4 md:px-5 lg:px-7 2xl:px-9;

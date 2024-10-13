@@ -1,10 +1,18 @@
 import React from "react";
-// import { aadLeaveType, formikProps, leaveTypeMutation } from "@/schemas";
-// import errorHelper from "@/utils/error";
 import { Field, FieldProps, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { CustomLoadingButton, InputField } from "./core";
 import { profileTypeMutation } from "@/schemas";
+import { saveProfile } from "./api"; // Use LocalStorage API
+
+interface ProfileFormProps {
+  initialValues: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    age?: string; // Make age optional if it's not required
+  };
+}
 
 const ProfileForm = () => {
   const {
@@ -12,14 +20,30 @@ const ProfileForm = () => {
     profileTypeSchemaInitialValue,
     profileTypeSchemaValidation,
   } = profileTypeMutation();
+
+  const handleSubmit = async (
+    values: any,
+    { setSubmitting, setErrors }: any
+  ) => {
+    try {
+      await saveProfile(values); // Save profile to localStorage (POST/PUT)
+      window.location.href = "/profile"; // Redirect to the profile display page on success
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrors({ submit: error.message }); // Handle error messages
+      } else {
+        setErrors({ submit: "An unknown error occurred." });
+      }
+    } finally {
+      setSubmitting(false); // Stop the loader
+    }
+  };
+
   return (
     <Formik
       initialValues={profileTypeSchemaInitialValue}
       validationSchema={Yup.object(profileTypeSchemaValidation)}
-      //   onSubmit={handleAddLeaveType}
-      onSubmit={(values) => {
-        console.log(values);
-      }}
+      onSubmit={handleSubmit}
     >
       {(formik) => (
         <Form className="grid grid-cols-12  gap-x-4 gap-y-7">
@@ -68,8 +92,8 @@ const ProfileForm = () => {
           ))}
           <div className="flex items-center col-span-12 justify-center flex-col gap-2 pt-2">
             <CustomLoadingButton
-              title={"Add"}
-              //   loading={isLoading}
+              title={"Create"}
+              loading={formik.isSubmitting}
               type="submit"
               className="btn-primary py-3 rounded-md w-full"
             />

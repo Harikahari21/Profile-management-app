@@ -17,7 +17,7 @@ const HomePage = () => {
             <h2 className="font-semibold text-3xl mt-8 mb-10 ">
               Create Your Personalized Profile !
             </h2>
-            <div className=" lg:w-1/2 w-full">
+            <div className="  w-full">
               <ProfileForm />
             </div>
           </div>
