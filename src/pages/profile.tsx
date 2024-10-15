@@ -119,7 +119,7 @@ const ProfileDetails = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 ">
+          <div className="bg-white p-6 rounded-lg shadow-lg lg:w-1/2 w-3/4">
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-semibold">Edit Profile</h3>
